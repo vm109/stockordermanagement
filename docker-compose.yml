@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  stockordermanagement_mysql:
+   image: mysql:5.7
+   ports:
+     - "3306:3306"
+   volumes:
+     - stockordermanagement_data:/var/lib/stockordermanagement
+   restart: always
+   environment:
+     MYSQL_ROOT_PASSWORD: password
+     MYSQL_DATABASE: StockOrderManagement
+     MYSQL_USER: root
+     MYSQL_PASSWORD: password
+
+  stockordermanagement:
+   build: .
+   depends_on:
+     - stockordermanagement_mysql
+   ports:
+     - "8087:8087"
+   environment:
+     - STOCK_ORDER_MANAGEMENT_DB_HOST=stockordermanagement_mysql
+     - STOCK_ORDER_MANAGEMENT_DB_PORT=3306
+     - STOCK_ORDER_MANAGEMENT_DB_USER=root
+     - STOCK_ORDER_MANAGEMENT_DB_PASSWORD=password
+     - STOCK_ORDER_MANAGEMENT_DATABASE=StockOrderManagement
+volumes:
+  stockordermanagement_data:
